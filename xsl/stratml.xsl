@@ -8,6 +8,10 @@
 	version="1.0">
 	
 <!--
+	Updated 2016-05-18
+	- added internationalization (i18n) prototype for StratML
+	- implemented some additional logic for disable generated titles without content (e.g. 'Obejctive(s)')
+	
 	Updated 2016-05-08
 	- changed general html output from table to div construction (improved readability)
 	- some minor changes to styles / representation 
@@ -166,19 +170,251 @@ acusson@01COMMUNICATIONS.com
 
 	<xsl:output encoding="UTF-8" indent="yes" method="html"/>
 	
+	<!-- (dhh)(ipt) internationalization prototype for StratML -->
 	<i18n:text>
 		<!-- termination message -->
 		<line id="TERMINATION_MESSAGE_en-US">Expected a "PerformancePlanOrReport" or "StrategicPlan" document element, but detected:</line>
 		<!-- table of contents -->
 		<line id="TOC_en-US">Table of contents</line>
 		<line id="TOC_en-UK">Contents</line>
-		<line id="TOC_de-DE">Inhalt</line>
+		<line id="TOC_de-DE">Inhaltsverzeichnis</line>
+		<!--doctype: Strategic_Plan-->
+		<line id="Strategic_Plan_en-US">Strategic_Plan</line>
+		<line id="Strategic_Plan_en-UK">Strategic_Plan</line>
+		<line id="Strategic_Plan_de-DE">Strategischer Plan</line>
+		<!--doctype: Performance_Plan-->
+		<line id="Performance_Plan_en-US">Performance_Plan</line>
+		<line id="Performance_Plan_en-UK">Performance_Plan</line>
+		<line id="Performance_Plan_de-DE">Leistungsvorgabe</line>
+		<!--doctype: Performance_Report-->
+		<line id="Performance_Report_en-US">Performance_Report</line>
+		<line id="Performance_Report_en-UK">Performance_Report</line>
+		<line id="Performance_Report_de-DE">Leistungsbericht</line>
+		<!--Source-->
+		<line id="Source_en-US">Source</line>
+		<line id="Source_en-UK">Source</line>
+		<line id="Source_de-DE">Quelle</line>
+		<!--Start-->
+		<line id="Start_en-US">Start</line>
+		<line id="Start_en-UK">Start</line>
+		<line id="Start_de-DE">Beginn</line>
+		<!--End-->
+		<line id="End_en-US">End</line>
+		<line id="End_en-UK">End</line>
+		<line id="End_de-DE">Zieldatum</line>
+		<!--Publication Date-->
+		<line id="Publication Date_en-US">Publication Date</line>
+		<line id="Publication Date_en-UK">Publication Date</line>
+		<line id="Publication Date_de-DE">Veröffentlichungsdatum</line>
+		<!--Vision-->
+		<line id="Vision_en-US">Vision</line>
+		<line id="Vision_en-UK">Vision</line>
+		<line id="Vision_de-DE">Vision</line>
+		<!--Mission-->
+		<line id="Mission_en-US">Mission</line>
+		<line id="Mission_en-UK">Mission</line>
+		<line id="Mission_de-DE">Mission</line>
+		<!--Values-->
+		<line id="Values_en-US">Values</line>
+		<line id="Values_en-UK">Values</line>
+		<line id="Values_de-DE">Werte</line>
+		<!--Submitter-->
+		<line id="Submitter_en-US">Submitter</line>
+		<line id="Submitter_en-UK">Submitter</line>
+		<line id="Submitter_de-DE">Antragsteller</line>
+		<!--Given name-->
+		<line id="Given name_en-US">Given name</line>
+		<line id="Given name_en-UK">Given name</line>
+		<line id="Given name_de-DE">Vorname</line>
+		<!--Surname-->
+		<line id="Surname_en-US">Surname</line>
+		<line id="Surname_en-UK">Surname</line>
+		<line id="Surname_de-DE">Nachname</line>
+		<!--Email Address-->
+		<line id="Email Address_en-US">Email Address</line>
+		<line id="Email Address_en-UK">Email Address</line>
+		<line id="Email Address_de-DE">Email Adresse</line>
+		<!--Organization-->
+		<line id="Organization_en-US">Organization</line>
+		<line id="Organization_en-UK">Organization</line>
+		<line id="Organization_de-DE">Organisation</line>
+		<!--Name-->
+		<line id="Name_en-US">Name</line>
+		<line id="Name_en-UK">Name</line>
+		<line id="Name_de-DE">Name</line>
+		<!--Acronym-->
+		<line id="Acronym_en-US">Acronym</line>
+		<line id="Acronym_en-UK">Acronym</line>
+		<line id="Acronym_de-DE">Kürzel</line>
+		<!--Stakeholder(s)-->
+		<line id="Stakeholder(s)_en-US">Stakeholder(s)</line>
+		<line id="Stakeholder(s)_en-UK">Stakeholder(s)</line>
+		<line id="Stakeholder(s)_de-DE">Interessensgruppe(n)</line>
+		<!--Person-->
+		<line id="Person_en-US">Person</line>
+		<line id="Person_en-UK">Person</line>
+		<line id="Person_de-DE">Person</line>
+		<!--Role-->
+		<line id="Role_en-US">Role</line>
+		<line id="Role_en-UK">Role</line>
+		<line id="Role_de-DE">Rolle</line>
+		<!--Goal -->
+		<line id="Goal _en-US">Goal </line>
+		<line id="Goal _en-UK">Goal </line>
+		<line id="Goal _de-DE">Zweck/Ziel </line>
+		<!--Objectives-->
+		<line id="Objectives_en-US">Objectives</line>
+		<line id="Objectives_en-UK">Objectives</line>
+		<line id="Objectives_de-DE">Zielsetzungen</line>
+		<!--Objective-->
+		<line id="Objective_en-US">Objective</line>
+		<line id="Objective_en-UK">Objective</line>
+		<line id="Objective_de-DE">Zielsetzung</line>
+		<!--Generic_Group-->
+		<line id="Generic_Group_en-US">Generic_Group</line>
+		<line id="Generic_Group_en-UK">Generic_Group</line>
+		<line id="Generic_Group_de-DE">Allg. Gruppe</line>
+		<!--Performer-->
+		<line id="Performer_en-US">Performer</line>
+		<line id="Performer_en-UK">Performer</line>
+		<line id="Performer_de-DE">Ausführender</line>
+		<!--Beneficiary-->
+		<line id="Beneficiary_en-US">Beneficiary</line>
+		<line id="Beneficiary_en-UK">Beneficiary</line>
+		<line id="Beneficiary_de-DE">Nutznießer</line>
+		<!--Other Information-->
+		<line id="Other Information_en-US">Other Information</line>
+		<line id="Other Information_en-UK">Other Information</line>
+		<line id="Other Information_de-DE">Weitere Informationen</line>
+		<!--INDICATORS-->
+		<line id="INDICATORS_en-US">INDICATORS</line>
+		<line id="INDICATORS_en-UK">INDICATORS</line>
+		<line id="INDICATORS_de-DE">INDIKATOREN</line>
+		<!--@PerformanceIndicatorTypeType: Quantitative-->
+		<line id="Quantitative_en-US">Quantitative</line>
+		<line id="Quantitative_en-UK">Quantitative</line>
+		<line id="Quantitative_de-DE">Quantitativ</line>
+		<!--@PerformanceIndicatorTypeType: Qualitative-->
+		<line id="Qualitative_en-US">Qualitative</line>
+		<line id="Qualitative_en-UK">Qualitative</line>
+		<line id="Qualitative_de-DE">Qualitativ</line>
+		<!--@ValueChainStageType: Outcome-->
+		<line id="Outcome_en-US">Outcome</line>
+		<line id="Outcome_en-UK">Outcome</line>
+		<line id="Outcome_de-DE">Folgen u. Ergebnisse</line>
+		<!--@ValueChainStageType: Output_Processing-->
+		<line id="Output_Processing_en-US">Output_Processing</line>
+		<line id="Output_Processing_en-UK">Output_Processing</line>
+		<line id="Output_Processing_de-DE">Output_Processing</line>
+		<!--@ValueChainStageType: Output-->
+		<line id="Output_en-US">Output</line>
+		<line id="Output_en-UK">Output</line>
+		<line id="Output_de-DE">Output</line>
+		<!--@ValueChainStageType: Input_Processing-->
+		<line id="Input_Processing_en-US">Input_Processing</line>
+		<line id="Input_Processing_en-UK">Input_Processing</line>
+		<line id="Input_Processing_de-DE">Input_Processing</line>
+		<!--@ValueChainStageType: Input-->
+		<line id="Outcome_en-US">Input</line>
+		<line id="Outcome_en-UK">Input</line>
+		<line id="Outcome_de-DE">Input</line>
+		<!--Measurements-->
+		<line id="Measurements_en-US">Measurements</line>
+		<line id="Measurements_en-UK">Measurements</line>
+		<line id="Measurements_de-DE">Messwerte</line>
+		<!--Type-->
+		<line id="Type_en-US">Type</line>
+		<line id="Type_en-UK">Type</line>
+		<line id="Type_de-DE">Typ</line>
+		<!--StartDate-->
+		<line id="StartDate_en-US">StartDate</line>
+		<line id="StartDate_en-UK">StartDate</line>
+		<line id="StartDate_de-DE">Starttermin</line>
+		<!--EndDate-->
+		<line id="EndDate_en-US">EndDate</line>
+		<line id="EndDate_en-UK">EndDate</line>
+		<line id="EndDate_de-DE">Stichtag</line>
+		<!--Units-->
+		<line id="Units_en-US">Units</line>
+		<line id="Units_en-UK">Units</line>
+		<line id="Units_de-DE">Einheiten</line>
+		<!--Description-->
+		<line id="Description_en-US">Description</line>
+		<line id="Description_en-UK">Description</line>
+		<line id="Description_de-DE">Beschreibung</line>
+		<!--Target-->
+		<line id="Target_en-US">Target</line>
+		<line id="Target_en-UK">Target</line>
+		<line id="Target_de-DE">Planziel / Vorgabe</line>
+		<!--Actual-->
+		<line id="Actual_en-US">Actual</line>
+		<line id="Actual_en-UK">Actual</line>
+		<line id="Actual_de-DE">Gegenwärtig</line>
+		<!--Relationships-->
+		<line id="Relationships_en-US">Relationships</line>
+		<line id="Relationships_en-UK">Relationships</line>
+		<line id="Relationships_de-DE">Beziehung / Zusammenhang</line>
+		<!--@RelationshipTypeType: Broader_Than-->
+		<line id="Broader_Than_en-US">Broader_Than</line>
+		<line id="Broader_Than_en-UK">Broader_Than</line>
+		<line id="Broader_Than_de-DE">Großzügiger als</line>
+		<!--@RelationshipTypeType: Peer_To-->
+		<line id="Peer_To_en-US">Peer_To</line>
+		<line id="Peer_To_en-UK">Peer_To</line>
+		<line id="Peer_To_de-DE">Gleichgestellt / Ebenbürtig</line>
+		<!--@RelationshipTypeType: Narrower_Than-->
+		<line id="Narrower_Than_en-US">Narrower_Than</line>
+		<line id="Narrower_Than_en-UK">Narrower_Than</line>
+		<line id="Narrower_Than_de-DE">Knapper als</line>
 	</i18n:text>
 	
+	<!-- (dhh)(ipt) internationalization prototype for StratML -->
 	<xsl:variable name="i18n" select="document('')/*/i18n:text"/>
-	<xsl:variable name="language" select="'en'"/>
-	<xsl:variable name="variant" select="'US'"/>
-	<xsl:variable name="local_suffix" select="concat('_',$language,'-',$variant)"/>
+	
+	<!-- (dhh)(ipt) 2do: specification of lang/var source -->
+	<xsl:variable name="language_default" select="'en'"/>
+	<xsl:variable name="language">
+		<xsl:choose>
+			<xsl:when test="//*[@language]"><xsl:value-of select="(//*[@language])[1]/@language"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$language_default"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="variant_default" select="'US'"/>
+	<xsl:variable name="variant">
+		<xsl:choose>
+			<xsl:when test="//*[@variant]"><xsl:value-of select="(//*[@variant])[1]/@variant"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$variant_default"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name="i18n_suffix_default" select="concat('_',$language_default,'-',$variant_default)"/>
+	<xsl:variable name="i18n_suffix" select="concat('_',$language,'-',$variant)"/>
+	
+	<!-- i18n logic with fallback strategy -->
+	<xsl:template name="get_i18n">
+		<xsl:param name="id"/>
+		<xsl:choose>
+			<!-- (dhh) gets first lang/variant specific line -->
+			<xsl:when test="string-length(($i18n//*[@id = concat($id,$i18n_suffix)])[1]) > 0"><xsl:value-of select="($i18n//*[@id = concat($id,$i18n_suffix)])[1]"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<!-- (dhh) gets first default-lang/-variant specific line -->
+					<xsl:when test="string-length(($i18n//*[@id = concat($id,$i18n_suffix_default)])[1]) > 0"><xsl:value-of select="($i18n//*[@id = concat($id,$i18n_suffix_default)])[1]"/></xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<!-- (dhh) gets first id specific line -->
+							<xsl:when test="string-length(($i18n//*[starts-with(@id,$id)])[1]) > 0"><xsl:value-of select="($i18n//*[starts-with(@id,$id)])[1]"/>"/></xsl:when>
+							<!-- (dhh) if everything fails - return id -->
+							<xsl:otherwise>
+								<xsl:message> warning: yet no i18n entry for id=[<xsl:value-of select="$id"/>]</xsl:message>
+								<xsl:value-of select="$id"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
 	<xsl:template match="/">
 		<xsl:variable name="doc-type">
@@ -188,12 +424,10 @@ acusson@01COMMUNICATIONS.com
 				<xsl:when test="local-name(*) = 'StrategicPlan'"><xsl:value-of select="'StrategicPlan'"/></xsl:when>
 				<xsl:otherwise>
 					<xsl:message terminate="yes">
-						<xsl:value-of select="$i18n/line[@id = concat('TERMINATION_MESSAGE',$local_suffix)]"/>
+						<!-- (dhh)(ipt) internationalization prototype for StratML -->
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">TERMINATION_MESSAGE</xsl:with-param></xsl:call-template>
 						"<xsl:value-of select="concat(namespace-uri(*), ':', local-name(*))"/>"
 					</xsl:message>
-					<!--<xsl:message terminate="yes">Expected a "PerformancePlanOrReport" or "StrategicPlan" document element, but detected:
-						"<xsl:value-of select="concat(namespace-uri(*), ':', local-name(*))"/>"
-			    	</xsl:message>-->
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -286,7 +520,8 @@ a:hover { color: black; }
 				</div>
 				<!-- (dhh) adding div construction -->
 				<div class="content" style="padding:10pt;">
-					<p class="docheading"><xsl:value-of select="$doc-type"/></p>
+					<!-- (dhh) <p class="docheading"><xsl:value-of select="$doc-type"/></p>-->
+					<p class="docheading"><xsl:call-template name="get_i18n"><xsl:with-param name="id" select="$doc-type"/></xsl:call-template></p>
 					<p class="docsubheading"><xsl:value-of select="$plan/*[local-name(.) = 'Name']"/></p>
 					<p class="para"><xsl:value-of select="$plan/*[local-name(.) = 'Description']"/></p>
 					<p class="para"><xsl:value-of select="$plan/*[local-name(.) = 'OtherInformation']"/></p>
@@ -295,7 +530,9 @@ a:hover { color: black; }
 							<xsl:call-template name="getid"/>
 						</xsl:variable>
 						<p class="docsubheading" id="{$anchor}">
-							<xsl:text>Source: </xsl:text>
+							<!-- dhh <xsl:text>Source: </xsl:text>-->
+							<xsl:call-template name="get_i18n"><xsl:with-param name="id">Source</xsl:with-param></xsl:call-template>
+							<xsl:text>: </xsl:text>
 							<br/>
 							<a href="{*[local-name(.) = 'Source']}" target="_blank">
 								<samp class="sourceheading">
@@ -304,12 +541,23 @@ a:hover { color: black; }
 							</a>
 						</p>
 						<p class="docsubheading">
-							<xsl:text>Start: </xsl:text>
-							<xsl:value-of select="*[local-name(.) = 'StartDate']"/> 
-							<xsl:text> End: </xsl:text>
-							<xsl:value-of select="*[local-name(.) = 'EndDate']"/> 
-		        			<xsl:text> Publication Date: </xsl:text>
-							<xsl:value-of select="*[local-name(.) = 'PublicationDate']"/>
+							<xsl:if test="string-length(*[local-name(.) = 'StartDate']) > 0">
+								<xsl:call-template name="get_i18n"><xsl:with-param name="id">Start</xsl:with-param></xsl:call-template>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="*[local-name(.) = 'StartDate']"/>
+							</xsl:if>
+							<xsl:if test="string-length(*[local-name(.) = 'EndDate']) > 0">
+								<xsl:text> </xsl:text>
+								<xsl:call-template name="get_i18n"><xsl:with-param name="id">End</xsl:with-param></xsl:call-template>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="*[local-name(.) = 'EndDate']"/>
+							</xsl:if>
+							<xsl:if test="string-length(*[local-name(.) = 'PublicationDate']) > 0">
+								<xsl:text> </xsl:text>
+								<xsl:call-template name="get_i18n"><xsl:with-param name="id">Publication Date</xsl:with-param></xsl:call-template>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="*[local-name(.) = 'PublicationDate']"/>
+		        			</xsl:if>
 						</p>
 					</xsl:for-each>
 					<table summary="submitter and organization information" class="doc" align="center">
@@ -317,27 +565,35 @@ a:hover { color: black; }
 							<td>
 								<xsl:variable name="submitter" select="$plan//*[local-name(.) = 'Submitter']"/>
 								<xsl:if test="normalize-space($submitter)">
-									<p class="subtitle">Submitter:</p>
+									<p class="subtitle">
+										<xsl:call-template name="get_i18n"><xsl:with-param name="id">Submitter</xsl:with-param></xsl:call-template>
+										<xsl:text>:</xsl:text>
+									</p>
 									<xsl:apply-templates select="$submitter"/>
 								</xsl:if>
 							</td>
 							<td>
 								<xsl:variable name="org" select="$plan/*[local-name(.) = 'StrategicPlanCore']/*[local-name(.) = 'Organization']"/>
 								<xsl:if test="normalize-space($org)">
-									<p class="subtitle">Organization:</p>
+									<p class="subtitle">
+										<xsl:call-template name="get_i18n"><xsl:with-param name="id">Organization</xsl:with-param></xsl:call-template>
+										<xsl:text>:</xsl:text>
+									</p>
 									<xsl:apply-templates select="$org"/>
 								</xsl:if>
 							</td>
 						</tr>
 					</table>
+					
 					<!-- <xsl:call-template name="toc"><xsl:with-param name="tocid" select="generate-id(//*[local-name(.) = 'StrategicPlanCore'])"/></xsl:call-template> -->
+					
 					<xsl:apply-templates select="//*[contains('Vision Mission', local-name(.))]"/>
 					<xsl:if test="//*[local-name(.) = 'Value' and normalize-space(.)]">
 						<p class="vmvhead" id="values_">
-							<xsl:text>Value</xsl:text>
-							<xsl:if test="count(//*[local-name(.) = 'Value' and normalize-space(.)])&gt;1">
-								<xsl:text>s</xsl:text>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="count(//*[local-name(.) = 'Value' and normalize-space(.)])&gt;1"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Values</xsl:with-param></xsl:call-template></xsl:when>
+								<xsl:otherwise><xsl:call-template name="get_i18n"><xsl:with-param name="id">Value</xsl:with-param></xsl:call-template></xsl:otherwise>
+							</xsl:choose>
 						</p>
 						<xsl:for-each select="//*[local-name(.) = 'Value']">
 							<p class="vmvdesc" id="{generate-id()}">
@@ -406,7 +662,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'GivenName' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Given name: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Given name</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -414,7 +671,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'Surname' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Surname: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Surname</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -422,7 +680,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'PhoneNumber' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Phone Number: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Phone Number</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -430,7 +689,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'EmailAddress' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Email Address: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Email Address</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<a href="mailto:{.}">
 						<samp>
@@ -448,7 +708,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'Name' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Name: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Name</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -456,7 +717,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'Acronym' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Acronym: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Acronym</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -464,7 +726,8 @@ a:hover { color: black; }
 			<xsl:for-each select="*[local-name(.) = 'Description' and normalize-space(.)]">
 				<p>
 					<b class="herald">
-						<xsl:text>Description: </xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Description</xsl:with-param></xsl:call-template>
+						<xsl:text>: </xsl:text>
 					</b>
 					<xsl:value-of select="."/>
 				</p>
@@ -480,8 +743,7 @@ a:hover { color: black; }
 		<xsl:for-each select="*/*[local-name(.) = 'StrategicPlanCore']">
 			<p class="toctitle" id="{$tocid}">
 				<br/><br/>
-				<xsl:value-of select="$i18n//*[@id = concat('TOC','_de-DE')]"/>
-				<!--<xsl:text>Table of contents</xsl:text>-->
+				<xsl:call-template name="get_i18n"><xsl:with-param name="id">TOC</xsl:with-param></xsl:call-template>
 				<br/><hr width="60%"/>
 			</p>
 			<xsl:for-each select="*[local-name(.) = 'Vision']">
@@ -489,7 +751,7 @@ a:hover { color: black; }
 					<xsl:variable name="anchor">
 						<xsl:call-template name="getid"/>
 					</xsl:variable>
-					<a href="#{$anchor}">Vision</a>
+					<a href="#{$anchor}"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Vision</xsl:with-param></xsl:call-template></a>
 				</p>
 			</xsl:for-each>
 			<xsl:for-each select="*[local-name(.) = 'Mission']">
@@ -497,16 +759,16 @@ a:hover { color: black; }
 					<xsl:variable name="anchor1">
 						<xsl:call-template name="getid"/>
 					</xsl:variable>
-					<a href="#{$anchor1}">Mission</a>
+					<a href="#{$anchor1}"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Mission</xsl:with-param></xsl:call-template></a>
 				</p>
 			</xsl:for-each>
 			<xsl:if test="*[local-name(.) = 'Value']">
 				<p class="tocentry">
 					<a href="#values_">
-						<xsl:text>Value</xsl:text>
-						<xsl:if test="count(*[local-name(.) = 'Value'])&gt;1">
-							<xsl:text>s</xsl:text>
-						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="count(*[local-name(.) = 'Value'])&gt;1"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Values</xsl:with-param></xsl:call-template></xsl:when>
+							<xsl:otherwise><xsl:call-template name="get_i18n"><xsl:with-param name="id">Value</xsl:with-param></xsl:call-template></xsl:otherwise>
+						</xsl:choose>
 					</a>
 				</p>
 				<xsl:for-each select="*[local-name(.) = 'Value']">
@@ -555,7 +817,7 @@ a:hover { color: black; }
 		<p class="goalhead" id="{$anchor}">
 			<a href="#{$anchor}">
 				<xsl:if test="not(contains(*[local-name(.) = 'SequenceIndicator'], 'Goal'))">
-					<xsl:text>Goal </xsl:text>
+					<xsl:call-template name="get_i18n"><xsl:with-param name="id">Goal </xsl:with-param></xsl:call-template>
 				</xsl:if>
 				<xsl:apply-templates select="*[local-name(.) = 'SequenceIndicator']"/>
 			</a>
@@ -571,19 +833,28 @@ a:hover { color: black; }
 		<xsl:call-template name="stakeholder">
 			<xsl:with-param name="level" select="'goal'"/>
 		</xsl:call-template>
-		<p class="infotitle">Objective(s):</p>
-		<xsl:for-each select="*[local-name(.) = 'Objective' and normalize-space(.)]">
-			<p class="tocsubentry">
-				<xsl:variable name="anchor2">
-					<xsl:call-template name="getid"/>
-				</xsl:variable>
-				<a href="#{$anchor2}">
-					<xsl:apply-templates select="*[local-name(.) = 'SequenceIndicator']"/>
-					<xsl:apply-templates select="*[local-name(.) = 'Name']"/>
-					<br/>
-				</a>
+		<!-- (dhh) only proceed if objectives exists -->
+		<xsl:if test="count(*[local-name(.) = 'Objective' and normalize-space(.)])>0">
+			<p class="infotitle">
+				<xsl:choose>
+					<xsl:when test="count(*[local-name(.) = 'Objective' and normalize-space(.)])>1"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Objectives</xsl:with-param></xsl:call-template></xsl:when>
+					<xsl:otherwise><xsl:call-template name="get_i18n"><xsl:with-param name="id">Objective</xsl:with-param></xsl:call-template></xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>:</xsl:text>
 			</p>
-		</xsl:for-each>
+			<xsl:for-each select="*[local-name(.) = 'Objective' and normalize-space(.)]">
+				<p class="tocsubentry">
+					<xsl:variable name="anchor2">
+						<xsl:call-template name="getid"/>
+					</xsl:variable>
+					<a href="#{$anchor2}">
+						<xsl:apply-templates select="*[local-name(.) = 'SequenceIndicator']"/>
+						<xsl:apply-templates select="*[local-name(.) = 'Name']"/>
+						<br/>
+					</a>
+				</p>
+			</xsl:for-each>
+		</xsl:if>
 		<br/>
 		<xsl:apply-templates select="*[local-name(.) = 'OtherInformation']"/>
 		<xsl:apply-templates select="*[contains('Objective  ', local-name(.))]"/>
@@ -593,7 +864,8 @@ a:hover { color: black; }
 		<xsl:param name="level" select="'org'"/>
 		<xsl:if test="*[local-name(.) = 'Stakeholder' and normalize-space(.)]">
 			<p class="{concat($level, 'staketitle')}">
-				<xsl:text>Stakeholder(s):</xsl:text>
+				<xsl:call-template name="get_i18n"><xsl:with-param name="id">Stakeholder(s)</xsl:with-param></xsl:call-template>
+				<xsl:text>:</xsl:text>
 			</p>
 			<xsl:apply-templates select="*[local-name(.) = 'Stakeholder']">
 				<xsl:with-param name="level" select="$level"/>
@@ -606,7 +878,7 @@ a:hover { color: black; }
 		<p class="{concat($level, 'stakeholder')}">
 	 		<xsl:if test="./@StakeholderTypeType">
 	 			<xsl:text>(</xsl:text>
-	 			<xsl:value-of select='@StakeholderTypeType'/>
+	 			<xsl:call-template name="get_i18n"><xsl:with-param name="id"><xsl:value-of select='@StakeholderTypeType'/></xsl:with-param></xsl:call-template>
 	 			<xsl:text>) </xsl:text>
 	 		</xsl:if>
 			<xsl:call-template name="name-desc-role"/>
@@ -633,13 +905,14 @@ a:hover { color: black; }
 				<xsl:if test="not(position() = 1)">
 					<xsl:text>, </xsl:text>
 				</xsl:if>
-				<xsl:apply-templates select="."/>
+				<xsl:call-template name="get_i18n"><xsl:with-param name="id"><xsl:apply-templates select="."/></xsl:with-param></xsl:call-template>
 			</xsl:for-each>
 			<xsl:text>)</xsl:text>
 		</xsl:if>
 		<br/>
 		<xsl:if test="*[local-name(.) = 'Role' and normalize-space(.)]">
-			<xsl:text>Role: </xsl:text>
+			<xsl:call-template name="get_i18n"><xsl:with-param name="id">Role</xsl:with-param></xsl:call-template>
+			<xsl:text>: </xsl:text>
 			<xsl:for-each select="*[local-name(.) = 'Role' and normalize-space(.)]">
 				<xsl:call-template name="name-desc-role"/>
 			</xsl:for-each>
@@ -653,8 +926,8 @@ a:hover { color: black; }
 		<p class="vmvhead" id="{$anchor}">
 			<a href="#{$anchor}">
 				<xsl:choose>
-					<xsl:when test="local-name(.) = 'Vision'">Vision</xsl:when>
-					<xsl:otherwise>Mission</xsl:otherwise>
+					<xsl:when test="local-name(.) = 'Vision'"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Vision</xsl:with-param></xsl:call-template></xsl:when>
+					<xsl:otherwise><xsl:call-template name="get_i18n"><xsl:with-param name="id">Mission</xsl:with-param></xsl:call-template></xsl:otherwise>
 				</xsl:choose>
 			</a>
 		</p>
@@ -669,7 +942,8 @@ a:hover { color: black; }
 		</xsl:variable>
 		<p class="objhead" id="{$anchor}">
 			<a href="#{$anchor}">
-				<xsl:text>Objective </xsl:text>
+				<xsl:call-template name="get_i18n"><xsl:with-param name="id">Objective</xsl:with-param></xsl:call-template>
+				<xsl:text> </xsl:text>
 				<xsl:apply-templates select="*[local-name(.) = 'SequenceIndicator']"/>
 			</a>
 			<xsl:for-each select="*[local-name(.) = 'Name']">
@@ -690,7 +964,8 @@ a:hover { color: black; }
 
 	<xsl:template match="*[local-name(.) = 'OtherInformation' and normalize-space(.)]">
 		<p class="infotitle" id="{generate-id(.)}">
-			<xsl:text>Other Information:</xsl:text>
+			<xsl:call-template name="get_i18n"><xsl:with-param name="id">Other Information</xsl:with-param></xsl:call-template>
+			<xsl:text>:</xsl:text>
 		</p>
 		<p class="para">
 			<xsl:apply-templates/>
@@ -699,7 +974,7 @@ a:hover { color: black; }
 
 	<xsl:template match="*[local-name(.) = 'PerformanceIndicator']">
 		<xsl:if test="position() = 1">
-			<p class="para-c">INDICATORS</p>
+			<p class="para-c"><xsl:call-template name="get_i18n"><xsl:with-param name="id">INDICATORS</xsl:with-param></xsl:call-template></p>
 		</xsl:if>
 		<xsl:variable name="anchor">
 			<xsl:call-template name="getid"/>
@@ -710,16 +985,18 @@ a:hover { color: black; }
 				<xsl:value-of select="normalize-space(*[local-name(.) = 'Name'])"/>
 				<xsl:if test="normalize-space(concat(@PerformanceIndicatorType, @ValueChainStage))">
 					<xsl:text>[</xsl:text>
-					<xsl:value-of select="normalize-space(@PerformanceIndicatorType)"/>
+					<xsl:call-template name="get_i18n"><xsl:with-param name="id"><xsl:value-of select="normalize-space(@PerformanceIndicatorType)"/></xsl:with-param></xsl:call-template>
 					<xsl:if test="normalize-space(@PerformanceIndicatorType) and normalize-space(@ValueChainStage)">
 						<xsl:text>, </xsl:text>
 					</xsl:if>
-					<xsl:value-of select="normalize-space(@ValueChainStage)"/>
+					<xsl:call-template name="get_i18n"><xsl:with-param name="id"><xsl:value-of select="normalize-space(@ValueChainStage)"/></xsl:with-param></xsl:call-template>
 					<xsl:text>]</xsl:text> 
 				</xsl:if>
-				<xsl:text>Measurements </xsl:text>
+				<xsl:call-template name="get_i18n"><xsl:with-param name="id">Measurements</xsl:with-param></xsl:call-template>
+				<xsl:text> </xsl:text>
 				<xsl:if test="*[local-name(.) = 'MeasurementDimension' and normalize-space(.)]">
-					<xsl:text>in </xsl:text>
+					<xsl:call-template name="get_i18n"><xsl:with-param name="id">in</xsl:with-param></xsl:call-template>
+					<xsl:text> </xsl:text>
 					<xsl:apply-templates select="*[local-name(.) = 'MeasurementDimension']"/>
 				</xsl:if>
 			</a>
@@ -734,7 +1011,7 @@ a:hover { color: black; }
 		
 		<!-- (dhh) moved representation of <Relationship> elements from above to below the indicators table -->
 		<xsl:if test="normalize-space(*[local-name(.) = 'Relationship'])">
-			<p class="para">Relationships:</p>
+			<p class="para"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Relationships</xsl:with-param></xsl:call-template>:</p>
 			<xsl:apply-templates select="*[local-name(.) = 'Relationship' and normalize-space(.)]"/>
 		</xsl:if>
 		
@@ -749,7 +1026,8 @@ a:hover { color: black; }
 			<a href="#{$anchor}">
 				<xsl:value-of select="*[local-name(.) = 'Name']"/>
 				<xsl:if test="normalize-space(@RelationshipType)">
-					<xsl:value-of select="concat(' - ', @RelationshipType)"/>
+					<xsl:text> - </xsl:text>
+					<xsl:call-template name="get_i18n"><xsl:with-param name="id"><xsl:value-of select="@RelationshipType"/></xsl:with-param></xsl:call-template>
 				</xsl:if>
 			</a>
 		</p>
@@ -763,16 +1041,16 @@ a:hover { color: black; }
 		<table align="center" class="datatable" width="98%">
 			<thead>
 				<tr>
-					<th align="center" width="10%">Type</th>
-					<th align="center" width="10%">StartDate</th>
-					<th align="center" width="10%">EndDate</th>
+					<th align="center" width="10%"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Type</xsl:with-param></xsl:call-template></th>
+					<th align="center" width="10%"><xsl:call-template name="get_i18n"><xsl:with-param name="id">StartDate</xsl:with-param></xsl:call-template></th>
+					<th align="center" width="10%"><xsl:call-template name="get_i18n"><xsl:with-param name="id">EndDate</xsl:with-param></xsl:call-template></th>
 					<th align="center" width="10%">
 						<xsl:choose>
-							<!-- if there is a unit of measurement specified wich is not jus twhitespace then use it -->
+							<!-- if there is a unit of measurement specified wich is not just whitespace then use it -->
 							<xsl:when test="*[local-name(.) = 'UnitOfMeasurement' and normalize-space(.)]">
 								<xsl:value-of select="*[local-name(.) = 'UnitOfMeasurement']"/>
 							</xsl:when>
-							<xsl:otherwise>Units</xsl:otherwise>
+							<xsl:otherwise><xsl:call-template name="get_i18n"><xsl:with-param name="id">Units</xsl:with-param></xsl:call-template></xsl:otherwise>
 						</xsl:choose>
 					</th>
 
@@ -787,7 +1065,7 @@ a:hover { color: black; }
 					<!-- end -->
 					
 					<!-- (dhh) modified width -->
-					<th align="center" width="*">Description</th>
+					<th align="center" width="*"><xsl:call-template name="get_i18n"><xsl:with-param name="id">Description</xsl:with-param></xsl:call-template></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -817,10 +1095,10 @@ a:hover { color: black; }
 			<td align="center" width="10%">
 				<xsl:choose>
 					<xsl:when test="local-name()='TargetResult'">
-						<xsl:text>Target</xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Target</xsl:with-param></xsl:call-template>
 					</xsl:when>
 					<xsl:when test="local-name()='ActualResult'">
-						<xsl:text>Actual</xsl:text>
+						<xsl:call-template name="get_i18n"><xsl:with-param name="id">Actual</xsl:with-param></xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- should not occur but just in case -->
